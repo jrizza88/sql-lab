@@ -30,8 +30,8 @@ WHERE CustomerID = 92;
 ## list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 7 orders.
 SELECT Customers.CustomerName, 
 COUNT(*) AS 'Orders Per Customer'
-FROM orders
-INNER JOIN customers 
+FROM customers
+INNER JOIN orders 
 ON orders.customerId = customers.CustomerId
 GROUP BY customers.customerId
 
@@ -39,15 +39,21 @@ GROUP BY customers.customerId
 
 SELECT Customers.CustomerName, orders.orderId,
 COUNT(orders.orderId)
-FROM orders
-INNER JOIN customers 
+FROM customers
+INNER JOIN orders
 ON orders.customerId = customers.CustomerId
 GROUP BY customers.customerId 
 ORDER BY COUNT(orders.orderId) DESC
 
 
 ## list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
-
-
+SELECT Customers.city,
+COUNT(*) AS 'Orders Per City'
+FROM customers
+INNER JOIN orders
+on orders.customerId = customers.customerId
+GROUP BY city
 
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
+DELETE FROM Customers 
+WHERE NOT EXISTS(SELECT NULL FROM Orders WHERE orders.customerId = Customers.CustomerId)
